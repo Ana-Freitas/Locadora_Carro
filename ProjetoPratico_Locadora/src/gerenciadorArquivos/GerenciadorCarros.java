@@ -7,6 +7,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 import entidades.Carro;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GerenciadorCarros {
 	
@@ -54,7 +56,7 @@ public class GerenciadorCarros {
             while(arquivoEntrada.available() > 0){
             	carro = (Carro)objetoEntrada.readObject();
             	if(carro.getPlaca().equals(placa)) {
-    					return true;
+                    return true;
             	}
             }
         }finally{
@@ -62,5 +64,25 @@ public class GerenciadorCarros {
             arquivoEntrada.close();
         }
         return false;
+    }
+    
+    public static List<Carro> getCarros(String caminho) throws IOException, ClassNotFoundException{
+        Carro carro = null;
+        List<Carro> carros  = new ArrayList<>();
+        FileInputStream arquivoEntrada = null;
+        ObjectInputStream objetoEntrada = null;
+        try{
+            arquivoEntrada = new FileInputStream(caminho);
+            
+            while(arquivoEntrada.available() > 0){
+                objetoEntrada = new ObjectInputStream(arquivoEntrada);
+                carro = (Carro)objetoEntrada.readObject();
+                carros.add(carro);
+            }
+        }finally{
+            objetoEntrada.close();
+            arquivoEntrada.close();
+        }
+        return carros;
     }
 }

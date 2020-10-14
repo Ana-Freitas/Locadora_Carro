@@ -18,21 +18,16 @@ import javax.swing.JTextField;
 
 import constantes.Constantes;
 import entidades.Carro;
-import entidades.Fisica;
-import entidades.Juridica;
 import entidades.Locacao;
 import entidades.Pessoa;
 import gerenciadorArquivos.GerenciadorCarros;
-import gerenciadorArquivos.GerenciadorLocacoes;
 import gerenciadorArquivos.GerenciadorPessoas;
-import janelasGraficas.JanelaCliente.RadioListener;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JList;
+import javax.swing.JScrollPane;
+import javax.swing.ListSelectionModel;
 import util.DataUtil;
 
 public class JanelaLocacao extends JInternalFrame implements ActionListener{
@@ -56,7 +51,9 @@ public class JanelaLocacao extends JInternalFrame implements ActionListener{
 
     //lista pessoas
     private JComboBox<String> cboClientes;
+    private JLabel lblClient;
     //lista carros
+    private JLabel lblCarros;
     private JList<String> lstCarros;
 	
     public JanelaLocacao(String titulo, JanelaPrincipal janela) {
@@ -75,11 +72,23 @@ public class JanelaLocacao extends JInternalFrame implements ActionListener{
         fieldDataRealizacao.setEditable(false);
         
         
+        lblClient = new JLabel("Selecione o cliente:");
+        
         String[] nomes = this.getPessoas();
         DefaultComboBoxModel model = new DefaultComboBoxModel(nomes);
-        cboClientes = new JComboBox<String>();
+        cboClientes = new JComboBox<>();
         cboClientes.setModel(model);
         
+        
+        lblCarros = new JLabel("Escolha os carros:");
+        String[] carros = this.getCarros();
+        
+        lstCarros = new JList(carros);
+        lstCarros.setFixedCellHeight(15);
+        lstCarros.setFixedCellWidth(100);
+        lstCarros.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+        //lstCarros.setVisibleRowCount(4);
+        //add(new JScrollPane(lstCarros));
         
         labelNumDiaria = new JLabel("Número de Diárias: ");        
         fieldNumDiaria = new JTextField(7);
@@ -99,7 +108,10 @@ public class JanelaLocacao extends JInternalFrame implements ActionListener{
         buttonLocacao = new JButton("Realizar Locação");
         buttonLocacao.addActionListener(this);
 
+        panel.add(lblClient);
         panel.add(cboClientes);
+        panel.add(lblCarros);
+        panel.add(new JScrollPane(lstCarros));
         panel.add(labelDataRealizacao);
         panel.add(fieldDataRealizacao);
         panel.add(labelNumDiaria);
@@ -124,7 +136,24 @@ public class JanelaLocacao extends JInternalFrame implements ActionListener{
                 nomes[i] = clientes.get(i).getNome();
             }
         } catch (IOException | ClassNotFoundException ex) {
-            System.out.println(ex);
+            JOptionPane.showMessageDialog(null, ex);
+        }
+        
+        return nomes;
+    }
+    
+    public String[] getCarros(){
+        List<Carro> carros;
+        String[] nomes = null;  
+        try {
+            carros = GerenciadorCarros.getCarros(Constantes.CAMINHO_CARRO);
+            nomes = new String[carros.size()];
+            
+            for (int i = 0; i < carros.size(); i++) {
+                nomes[i] = carros.get(i).getModelo();
+            }
+        } catch (IOException | ClassNotFoundException ex) {
+            JOptionPane.showMessageDialog(null, ex);
         }
         
         return nomes;

@@ -81,8 +81,9 @@ public class GerenciadorPessoas {
         ObjectInputStream objetoEntrada = null;
         try{
             arquivoEntrada = new FileInputStream(caminho);
-            objetoEntrada = new ObjectInputStream(arquivoEntrada);
+            
             while(arquivoEntrada.available() > 0){
+                objetoEntrada = new ObjectInputStream(arquivoEntrada);
                 pessoa = (Pessoa)objetoEntrada.readObject();
                 pessoas.add(pessoa);
             }

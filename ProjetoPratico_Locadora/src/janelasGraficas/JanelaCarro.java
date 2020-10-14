@@ -20,8 +20,7 @@ import javax.swing.JTextField;
 
 import constantes.Constantes;
 import entidades.Carro;
-import gerenciadorArquivos.GerenciadorCarros;
-import gerenciadorArquivos.GerenciadorPessoas;
+import java.io.IOException;
 
 public class JanelaCarro extends JInternalFrame implements ActionListener{
 
@@ -47,9 +46,9 @@ public class JanelaCarro extends JInternalFrame implements ActionListener{
 	
 	private JRadioButton radioArCond;
 	
-	private JRadioButton radioDisponivel;
+	/*private JRadioButton radioDisponivel;
     private JRadioButton radioAlocado;
-    private ButtonGroup group;
+    private ButtonGroup group;*/
 	
     private JButton buttonInserir;
 	
@@ -78,7 +77,7 @@ public class JanelaCarro extends JInternalFrame implements ActionListener{
         labelQtdPortas = new JLabel("Quantidade de portas: ");        
         fieldQtdPortas = new JTextField(10);
         
-        labelValorDia = new JLabel("Valor Diária: ");        
+        labelValorDia = new JLabel("Valor Diï¿½ria: ");        
         fieldValorDia = new JTextField(10);
         
         labelEstado = new JLabel("Estado: ");        
@@ -87,7 +86,7 @@ public class JanelaCarro extends JInternalFrame implements ActionListener{
         radioArCond = new JRadioButton("Possui Ar Condicionado");
         radioArCond.setSelected(false);
         
-        radioDisponivel = new JRadioButton("Disponível");
+       /* radioDisponivel = new JRadioButton("Disponï¿½vel");
         radioDisponivel.setSelected(true);
 
         radioAlocado = new JRadioButton("Alocado");
@@ -95,7 +94,7 @@ public class JanelaCarro extends JInternalFrame implements ActionListener{
 
         group = new ButtonGroup();
         group.add(radioDisponivel);
-        group.add(radioAlocado);
+        group.add(radioAlocado);*/
         
         buttonInserir = new JButton("Cadastrar Carro");
         buttonInserir.addActionListener(this);
@@ -115,55 +114,59 @@ public class JanelaCarro extends JInternalFrame implements ActionListener{
         panel.add(fieldValorDia);
         panel.add(labelEstado);
         panel.add(fieldEstado);
-        panel.add(radioDisponivel);
-        panel.add(radioAlocado);    	
+        //panel.add(radioDisponivel);
+        //panel.add(radioAlocado);    	
         panel.add(buttonInserir);
         
     	add(panel);
 	}
 	
 	private void ajustarPropridadesJanela() {
-		setVisible(true);
-		setSize(500,300);
-		setLocation(45, 20);
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            setVisible(true);
+            setSize(500,300);
+            setLocation(45, 20);
+            setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent event) {
-		// TODO Auto-generated method stub
-		if(event.getSource() == buttonInserir) {
-			inserirCarro();
-        }
+            if(event.getSource() == buttonInserir) {
+                inserirCarro();
+            }
 	}
 	
-	private void inserirCarro() {
+    private void inserirCarro() {
         boolean inseriu = false;        
         try{       
-			if(GerenciadorCarros.existe(fieldPlaca.getText(), Constantes.CAMINHO_CARRO)) {
-				Carro carro = new Carro(fieldMarca.getText(), fieldModelo.getText(), Integer.parseInt(fieldAno.getText()), fieldPlaca.getText(), Short.parseShort(fieldQtdPortas.getText()), radioArCond.isSelected(), Double.parseDouble(fieldValorDia.getText()), fieldEstado.getText(), radioDisponivel.isSelected());
-				carro.salvarCarro(Constantes.CAMINHO_CARRO);	
-				inseriu = true;
-			}else {
-				JOptionPane.showMessageDialog(this, "Cliente já está cadastrado!", "Erro", JOptionPane.ERROR_MESSAGE);
-			}	
-		}catch (Exception e){
-			JOptionPane.showMessageDialog(this, "Algum campo está vazio, por favor preencher todos os campos!", "Erro", JOptionPane.ERROR_MESSAGE);
-		}
+            Carro carro = new Carro(fieldMarca.getText(), fieldModelo.getText(), Integer.parseInt(fieldAno.getText()), fieldPlaca.getText(), Short.parseShort(fieldQtdPortas.getText()), radioArCond.isSelected(), Double.parseDouble(fieldValorDia.getText()), fieldEstado.getText(), true);
+            if(carro.salvarCarro(Constantes.CAMINHO_CARRO)){
+                JOptionPane.showMessageDialog(this, "Carro cadastrado com sucesso!");
+                inseriu = true;
+            }else {
+                JOptionPane.showMessageDialog(this, "Carro jÃ¡ estÃ¡ cadastrado!", "Erro", JOptionPane.ERROR_MESSAGE);
+            }	
+        }   catch (IOException ex) {
+                JOptionPane.showMessageDialog(this, "Ocorreu um erro ao acessar o arquivo. Erro:" + ex);
+            } catch (ClassNotFoundException ex) {
+                JOptionPane.showMessageDialog(this, "NÃ£o foi possÃ­vel encontrar a classe. Erro:" + ex);
+            } catch(Exception ex){
+                JOptionPane.showMessageDialog(this, "Algum campo estÃ¡ vazio, por favor preencher todos os campos!", "Erro", JOptionPane.ERROR_MESSAGE);
+            }
+        
         
         if(inseriu){
-        	limparCampos(fieldMarca, fieldModelo, fieldAno, fieldPlaca, fieldQtdPortas, fieldValorDia, fieldEstado);
-        	fieldMarca.requestFocusInWindow();
+            limparCampos(fieldMarca, fieldModelo, fieldAno, fieldPlaca, fieldQtdPortas, fieldValorDia, fieldEstado);
+            fieldMarca.requestFocusInWindow();
         }else{
-        	JOptionPane.showMessageDialog(this, "Carro não inserido", "Erro", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Carro nÃ£o inserido", "Erro", JOptionPane.ERROR_MESSAGE);
         }
     }
 	
-	private void limparCampos(JTextField... fields) {
+    private void limparCampos(JTextField... fields) {
         for(JTextField field : fields) {
             field.setText(null);
             radioArCond.setSelected(false);
-            radioDisponivel.setSelected(true);
+            //radioDisponivel.setSelected(true);
         }
     }
 }
