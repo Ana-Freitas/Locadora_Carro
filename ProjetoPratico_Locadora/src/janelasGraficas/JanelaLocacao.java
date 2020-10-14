@@ -26,6 +26,13 @@ import gerenciadorArquivos.GerenciadorCarros;
 import gerenciadorArquivos.GerenciadorLocacoes;
 import gerenciadorArquivos.GerenciadorPessoas;
 import janelasGraficas.JanelaCliente.RadioListener;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JComboBox;
+import javax.swing.JList;
 import util.DataUtil;
 
 public class JanelaLocacao extends JInternalFrame implements ActionListener{
@@ -43,13 +50,14 @@ public class JanelaLocacao extends JInternalFrame implements ActionListener{
     private JTextField fieldDataDevolucao;
     private JLabel labelDataMaxDevolucao;
     private JTextField fieldDataMaxDevolucao;
-    
 
     private JButton buttonLocacao;
     private Locacao locacao; 
 
     //lista pessoas
+    private JComboBox<String> cboClientes;
     //lista carros
+    private JList<String> lstCarros;
 	
     public JanelaLocacao(String titulo, JanelaPrincipal janela) {
         super(titulo, true, true, true, true);
@@ -65,6 +73,12 @@ public class JanelaLocacao extends JInternalFrame implements ActionListener{
         fieldDataRealizacao = new JTextField(7);
         fieldDataRealizacao.setText(DataUtil.getDataFormatada(LocalDate.now()));
         fieldDataRealizacao.setEditable(false);
+        
+        
+        String[] nomes = this.getPessoas();
+        DefaultComboBoxModel model = new DefaultComboBoxModel(nomes);
+        cboClientes = new JComboBox<String>();
+        cboClientes.setModel(model);
         
         
         labelNumDiaria = new JLabel("Número de Diárias: ");        
@@ -85,6 +99,7 @@ public class JanelaLocacao extends JInternalFrame implements ActionListener{
         buttonLocacao = new JButton("Realizar Locação");
         buttonLocacao.addActionListener(this);
 
+        panel.add(cboClientes);
         panel.add(labelDataRealizacao);
         panel.add(fieldDataRealizacao);
         panel.add(labelNumDiaria);
@@ -97,6 +112,23 @@ public class JanelaLocacao extends JInternalFrame implements ActionListener{
         
     	add(panel);
     }
+    
+    public String[] getPessoas(){
+        List<Pessoa> clientes;
+        String[] nomes = null;  
+        try {
+            clientes = GerenciadorPessoas.getPessoas(Constantes.CAMINHO_PESSOA);
+            nomes = new String[clientes.size()];
+            
+            for (int i = 0; i < clientes.size(); i++) {
+                nomes[i] = clientes.get(i).getNome();
+            }
+        } catch (IOException | ClassNotFoundException ex) {
+            System.out.println(ex);
+        }
+        
+        return nomes;
+    }
 	
     private void ajustarPropridadesJanela() {
         setVisible(true);
@@ -108,7 +140,6 @@ public class JanelaLocacao extends JInternalFrame implements ActionListener{
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-            // TODO Auto-generated method stub
             if(e.getSource() == buttonLocacao) {
                 realizarLocacao();
             }

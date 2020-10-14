@@ -9,6 +9,8 @@ import java.io.ObjectOutputStream;
 import entidades.Fisica;
 import entidades.Juridica;
 import entidades.Pessoa;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GerenciadorPessoas {
 	
@@ -70,5 +72,24 @@ public class GerenciadorPessoas {
             arquivoEntrada.close();
         }
         return false;
+    }
+    
+    public static List<Pessoa> getPessoas(String caminho) throws IOException, ClassNotFoundException{
+        Pessoa pessoa = null;
+        List<Pessoa> pessoas = new ArrayList<>();
+        FileInputStream arquivoEntrada = null;
+        ObjectInputStream objetoEntrada = null;
+        try{
+            arquivoEntrada = new FileInputStream(caminho);
+            objetoEntrada = new ObjectInputStream(arquivoEntrada);
+            while(arquivoEntrada.available() > 0){
+                pessoa = (Pessoa)objetoEntrada.readObject();
+                pessoas.add(pessoa);
+            }
+        }finally{
+            objetoEntrada.close();
+            arquivoEntrada.close();
+        }
+        return pessoas;
     }
 }

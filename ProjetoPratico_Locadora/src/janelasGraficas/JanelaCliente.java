@@ -21,6 +21,7 @@ import entidades.Juridica;
 import entidades.Locacao;
 import entidades.Pessoa;
 import gerenciadorArquivos.GerenciadorPessoas;
+import java.util.ArrayList;
 
 public class JanelaCliente extends JInternalFrame implements ActionListener{
 
@@ -140,29 +141,29 @@ public class JanelaCliente extends JInternalFrame implements ActionListener{
         
         try{        	
             nome = fieldNome.getText();
-            locacoes = null; //ver as locacoes
+            locacoes = new ArrayList<>(); //ver as locacoes
 
             cpfcnpj = opcao? fieldCPF.getText() : fieldCNPJ.getText();
 
-            if(GerenciadorPessoas.existe(cpfcnpj, Constantes.CAMINHO_PESSOA)) {
-                if(opcao) {	
-                    cpfcnpj = fieldCPF.getText();
-                    pessoa = new Fisica(nome, locacoes, cpfcnpj);
-                }else {
-                    cpfcnpj = fieldCNPJ.getText();
-                    razaoSocial = fieldRazaoSocial.getText();
-                    pessoa = new Juridica(nome, locacoes, cpfcnpj, razaoSocial);
-                }			
+            if(opcao) {	
+                cpfcnpj = fieldCPF.getText();
+                pessoa = new Fisica(nome, locacoes, cpfcnpj);
+            }else {
+                cpfcnpj = fieldCNPJ.getText();
+                razaoSocial = fieldRazaoSocial.getText();
+                pessoa = new Juridica(nome, locacoes, cpfcnpj, razaoSocial);
+            }			
 
-                pessoa.salvarPessoa(Constantes.CAMINHO_PESSOA);	
+            if(pessoa.salvarPessoa(Constantes.CAMINHO_PESSOA)){
+                JOptionPane.showMessageDialog(null, "Cliente cadastrado com sucesso!");
                 inseriu = true;
             }else {
                 JOptionPane.showMessageDialog(this, "Cliente já está cadastrado!", "Erro", JOptionPane.ERROR_MESSAGE);
             }
 			
-        }catch (Exception e){
+            }catch (Exception e){
                 JOptionPane.showMessageDialog(this, "Algum campo está vazio, por favor preencher todos os campos!", "Erro", JOptionPane.ERROR_MESSAGE);
-        }
+            }
         
         if(inseriu){
         	limparCampos(fieldNome, fieldCPF, fieldCNPJ, fieldRazaoSocial);

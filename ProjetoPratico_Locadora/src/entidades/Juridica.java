@@ -12,26 +12,26 @@ public class Juridica extends Pessoa{
     private String razaoSocial;
 	
     public Juridica(String nome, List<Locacao> locacoes, String cnpj, String razaoSocial) {
-		super(nome, locacoes);
-		this.cnpj = cnpj;
-		this.razaoSocial = razaoSocial;
-		this.tipoPessoa = enmTipo.JURIDICO;
-	}
+        super(nome, locacoes);
+        this.cnpj = cnpj;
+        this.razaoSocial = razaoSocial;
+        this.tipoPessoa = enmTipo.JURIDICO;
+    }
 
-	public String getCnpj() {
-		return cnpj;
-	}
+    public String getCnpj() {
+        return cnpj;
+    }
 
-	public void setCnpj(String cnpj) {
-		this.cnpj = cnpj;
-	}
+    public void setCnpj(String cnpj) {
+        this.cnpj = cnpj;
+    }
 
-	public String getRazaoSocial() {
-		return razaoSocial;
-	}
+    public String getRazaoSocial() {
+       return razaoSocial;
+    }
 
-	public void setRazaoSocial(String razaoSocial) {
-		this.razaoSocial = razaoSocial;
-	}
+    public void setRazaoSocial(String razaoSocial) {
+        this.razaoSocial = razaoSocial;
+    }
     
 }

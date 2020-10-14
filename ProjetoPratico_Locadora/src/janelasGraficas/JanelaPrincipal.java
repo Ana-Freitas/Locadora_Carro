@@ -52,10 +52,10 @@ public class JanelaPrincipal extends JFrame implements ActionListener{
     	itemInserirCarro = new JMenuItem("Cadastrar Carro");
     	itemInserirCarro.addActionListener(this);
     	
-    	itemRealizarLocacao = new JMenuItem("Realizar Locação");
+    	itemRealizarLocacao = new JMenuItem("Realizar LocaÃ§Ã£o");
     	itemRealizarLocacao.addActionListener(this);
     	
-    	itemRealizarDevolucao = new JMenuItem("Realizar Devolução");
+    	itemRealizarDevolucao = new JMenuItem("Realizar DevoluÃ§Ã£o");
     	itemRealizarDevolucao.addActionListener(this);
     	
     	itemSair = new JMenuItem("Sair");
@@ -77,25 +77,25 @@ public class JanelaPrincipal extends JFrame implements ActionListener{
 	}
 	
 	 private void ajustarPropriedadesJanela() {
-	        setVisible(true);
-	        setSize(600, 400);
-	        setLocationRelativeTo(null);
-	        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            setVisible(true);
+            setSize(600, 400);
+            setLocationRelativeTo(null);
+            setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	 }
 	 
 	 private void addJanelaInterna(JInternalFrame janelaInterna) {
-	    	desktop.add(janelaInterna);
-	    	desktop.moveToFront(janelaInterna);
-	    	
-	    	janelaInterna.addInternalFrameListener(new OuvinteJanelaInterna());
-	        janelaInterna.requestFocusInWindow();
-	        
-	        try { 
-	        	janelaInterna.setSelected(true); 
-	        } catch(PropertyVetoException erro) {
-	        	System.err.println("Erro: " + erro.getMessage());
-	        }   	
-	    }
+            desktop.add(janelaInterna);
+            desktop.moveToFront(janelaInterna);
+
+            janelaInterna.addInternalFrameListener(new OuvinteJanelaInterna());
+            janelaInterna.requestFocusInWindow();
+
+            try { 
+                janelaInterna.setSelected(true); 
+            } catch(PropertyVetoException erro) {
+                System.err.println("Erro: " + erro.getMessage());
+            }   	
+	}
 	 
 	 @Override
 	    public void actionPerformed(ActionEvent e) {
@@ -106,18 +106,18 @@ public class JanelaPrincipal extends JFrame implements ActionListener{
 	    			addJanelaInterna(janelaCliente);
 	    		}
 			}else if(itemClicado == itemInserirCarro){
-				if(janelaCarro == null) {
-					janelaCarro = new JanelaCarro("Cadastrar Carro", this);
-					addJanelaInterna(janelaCarro); 
-				}
+                            if(janelaCarro == null) {
+                                janelaCarro = new JanelaCarro("Cadastrar Carro", this);
+                                addJanelaInterna(janelaCarro); 
+                            }
 			}else if(itemClicado == itemRealizarLocacao){
 				if(janelaLocacao == null) {
-					janelaLocacao = new JanelaLocacao("Realizar Locação", this);
+					janelaLocacao = new JanelaLocacao("Realizar LocaÃ§Ã£o", this);
 					addJanelaInterna(janelaLocacao);    
 				}
 	    	}else if(itemClicado == itemRealizarDevolucao){
 	    		if(janelaDevolucao == null) {
-	    			janelaDevolucao = new JanelaDevolucao("Realizar Devolução", this);
+	    			janelaDevolucao = new JanelaDevolucao("Realizar Devoluï¿½ï¿½o", this);
 	    			addJanelaInterna(janelaDevolucao);  
 	    		}
 	    	}else {
