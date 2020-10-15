@@ -12,7 +12,7 @@ import java.util.List;
 
 public class GerenciadorCarros {
 	
-	public static void gravar(Carro carro, String caminho) throws IOException{
+    public static void gravar(Carro carro, String caminho) throws IOException{
         FileOutputStream arquivoSaida = null;
         ObjectOutputStream objetoSaida = null;
         try{
@@ -85,4 +85,6 @@ public class GerenciadorCarros {
         }
         return carros;
     }
+    
+    
 }

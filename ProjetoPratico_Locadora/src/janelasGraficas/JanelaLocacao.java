@@ -2,7 +2,6 @@ package janelasGraficas;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.time.LocalDate;
@@ -23,12 +22,14 @@ import entidades.Pessoa;
 import gerenciadorArquivos.GerenciadorCarros;
 import gerenciadorArquivos.GerenciadorPessoas;
 import java.io.IOException;
+import java.util.ArrayList;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 import util.DataUtil;
+import util.FuncoesUteis;
 
 public class JanelaLocacao extends JInternalFrame implements ActionListener{
 
@@ -86,7 +87,7 @@ public class JanelaLocacao extends JInternalFrame implements ActionListener{
         lstCarros = new JList(carros);
         lstCarros.setFixedCellHeight(15);
         lstCarros.setFixedCellWidth(100);
-        lstCarros.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+        lstCarros.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         //lstCarros.setVisibleRowCount(4);
         //add(new JScrollPane(lstCarros));
         
@@ -166,56 +167,92 @@ public class JanelaLocacao extends JInternalFrame implements ActionListener{
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }
 	
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-            if(e.getSource() == buttonLocacao) {
-                realizarLocacao();
-            }
-	}
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if(e.getSource() == buttonLocacao) {
+            realizarLocacao();
+        }
+    }
 	
-	private void realizarLocacao() {
-            boolean inseriu = false;   
-            Pessoa pessoa = null;
-            List<Carro> carros = null;
-        try{        
-            //if(GerenciadorCarros.existe(fieldPlaca.getText(), Constantes.CAMINHO_LOCACAO)) {
-            locacao = new Locacao(LocalDate.parse(fieldDataRealizacao.getText()), Integer.parseInt(fieldNumDiaria.getText()), LocalDate.parse(fieldDataMaxDevolucao.getText()), pessoa, carros);
-            locacao.salvarLocacao(Constantes.CAMINHO_LOCACAO);	
-                    inseriu = true;
-            //}else {
-            //	JOptionPane.showMessageDialog(this, "Loca��o j� existe!", "Erro", JOptionPane.ERROR_MESSAGE);
-            //}	
-        }catch (Exception e){
-            JOptionPane.showMessageDialog(this, "Algum campo est� vazio, por favor preencher todos os campos!", "Erro", JOptionPane.ERROR_MESSAGE);
+    private void realizarLocacao() {
+        boolean inseriu = false;   
+        Pessoa pessoa = null;
+        List<Carro> carros = null;
+        try{  
+            if(this.validarCampos()){
+                carros = this.getCarrosSelecionados();
+                pessoa = Pessoa.getPessoa(cboClientes.getSelectedItem().toString(), Constantes.CAMINHO_PESSOA);
+                locacao = new Locacao(DataUtil.formatToLocalDate(fieldDataRealizacao.getText()), Integer.parseInt(fieldNumDiaria.getText()), DataUtil.formatToLocalDate(fieldDataMaxDevolucao.getText()), pessoa, carros);
+                locacao.salvarLocacao(Constantes.CAMINHO_LOCACAO);	
+                inseriu = true;
+                JOptionPane.showMessageDialog(null, "Locação feita com sucesso!");
+            }
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null,ex);
+        } catch (ClassNotFoundException ex) {
+            JOptionPane.showMessageDialog(null,ex);
         }
         
         if(inseriu){
         	limparCampos(fieldNumDiaria, fieldDataDevolucao, fieldDataMaxDevolucao);
         	fieldDataRealizacao.requestFocusInWindow();
         }else{
-        	JOptionPane.showMessageDialog(this, "Loca��o n�o inserida", "Erro", JOptionPane.ERROR_MESSAGE);
+        	JOptionPane.showMessageDialog(this, "Locação não inserida", "Erro", JOptionPane.ERROR_MESSAGE);
         }
     }
 	
-	private void limparCampos(JTextField... fields) {
+    private void limparCampos(JTextField... fields) {
         for(JTextField field : fields) {
             field.setText(null);
         }
     }
+    
+    private boolean validarCampos(){
+        if(this.fieldNumDiaria.getText().trim().isEmpty() || !FuncoesUteis.isNumber(this.fieldNumDiaria.getText().trim())){
+            JOptionPane.showMessageDialog(this, "Preencha o número de dias corretamente");
+            return false;
+        }
+        
+        return true;
+    }
+    
+    private List<Carro> getCarrosSelecionados(){
+        List<String> carrosSel = this.lstCarros.getSelectedValuesList();
+        List<Carro> carrosSelecionados = new ArrayList<>();
+        try {
+            List<Carro> carros = GerenciadorCarros.getCarros(Constantes.CAMINHO_CARRO);
+            
+            for (Carro carro : carros) {
+                for (String item : carrosSel) {
+                    if(carro.getModelo().equals(item)){
+                        carrosSelecionados.add(carro);
+                    }
+                }
+            }
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null, ex);
+        } catch (ClassNotFoundException ex) {
+            JOptionPane.showMessageDialog(null, ex);
+        }
+        
+        return carrosSelecionados;
+    }
 	
-	public class NumDiariaListener implements KeyListener {
+    public class NumDiariaListener implements KeyListener {
     	@Override
         public void keyReleased(KeyEvent e) {
             if(e.getSource() == fieldNumDiaria) {
+                
+                if(FuncoesUteis.isNumber(fieldNumDiaria.getText())){
                     if(fieldNumDiaria.getText().isEmpty()) {
-                            fieldDataMaxDevolucao.setText("");
+                        fieldDataMaxDevolucao.setText("");
                     }else if (Integer.parseInt(fieldNumDiaria.getText()) <= 0){	    			
-                        JOptionPane.showMessageDialog(null,"O n�mero de di�rias deve ser maior que 0!", "Erro", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(null,"O número de diárias deve ser maior que 0!", "Erro", JOptionPane.ERROR_MESSAGE);
                     }else {	        	
-                            String diaMaxDevolucao = DataUtil.calcularDiaMaxDevolucao(Integer.parseInt(fieldNumDiaria.getText()));
-                            fieldDataMaxDevolucao.setText(diaMaxDevolucao);
+                        String diaMaxDevolucao = DataUtil.calcularDiaMaxDevolucao(Integer.parseInt(fieldNumDiaria.getText()));
+                        fieldDataMaxDevolucao.setText(diaMaxDevolucao);
                     }
+                }
             }
     	}
 
