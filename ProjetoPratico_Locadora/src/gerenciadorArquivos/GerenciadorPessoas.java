@@ -9,12 +9,14 @@ import java.io.ObjectOutputStream;
 import entidades.Fisica;
 import entidades.Juridica;
 import entidades.Pessoa;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class GerenciadorPessoas {
-	
-	public static void gravar(Pessoa pessoa, String caminho) throws IOException{
+    
+    public static void gravar(Pessoa pessoa, String caminho) throws IOException{
         FileOutputStream arquivoSaida = null;
         ObjectOutputStream objetoSaida = null;
         try{
@@ -92,5 +94,25 @@ public class GerenciadorPessoas {
             arquivoEntrada.close();
         }
         return pessoas;
+    }
+    
+    public static boolean atualizarPessoa(Pessoa pessoa, String caminho) throws FileNotFoundException, IOException, ClassNotFoundException{
+            List<Pessoa> pessoas = GerenciadorPessoas.getPessoas(caminho);
+            
+            for (Pessoa p : pessoas) {
+                if(p.getNome().equals(pessoa.getNome())){
+                    p = pessoa;
+                }
+            }
+            
+            boolean success = (new File(caminho)).delete();
+            if(success){
+                for (Pessoa p : pessoas) {
+                    GerenciadorPessoas.gravar(p, caminho);
+                }
+                
+                return true;
+            }
+        return false;
     }
 }

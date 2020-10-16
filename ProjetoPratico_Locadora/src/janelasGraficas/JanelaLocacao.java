@@ -183,6 +183,9 @@ public class JanelaLocacao extends JInternalFrame implements ActionListener{
                 carros = this.getCarrosSelecionados();
                 pessoa = Pessoa.getPessoa(cboClientes.getSelectedItem().toString(), Constantes.CAMINHO_PESSOA);
                 locacao = new Locacao(DataUtil.formatToLocalDate(fieldDataRealizacao.getText()), Integer.parseInt(fieldNumDiaria.getText()), DataUtil.formatToLocalDate(fieldDataMaxDevolucao.getText()), pessoa, carros);
+                pessoa.addLocacao(locacao);
+                GerenciadorPessoas.atualizarPessoa(pessoa, Constantes.CAMINHO_PESSOA);
+                GerenciadorCarros.atualizarCarro(carros, Constantes.CAMINHO_CARRO);
                 locacao.salvarLocacao(Constantes.CAMINHO_LOCACAO);	
                 inseriu = true;
                 JOptionPane.showMessageDialog(null, "Locação feita com sucesso!");
@@ -225,6 +228,7 @@ public class JanelaLocacao extends JInternalFrame implements ActionListener{
             for (Carro carro : carros) {
                 for (String item : carrosSel) {
                     if(carro.getModelo().equals(item)){
+                        carro.setSituacao(false);
                         carrosSelecionados.add(carro);
                     }
                 }

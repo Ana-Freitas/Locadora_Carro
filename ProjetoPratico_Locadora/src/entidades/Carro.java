@@ -4,11 +4,10 @@ import java.io.IOException;
 import java.io.Serializable;
 
 import gerenciadorArquivos.GerenciadorCarros;
-import gerenciadorArquivos.GerenciadorPessoas;
 
 public class Carro implements Serializable{
 	
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 	
     private static int codigo;
     private String marca;

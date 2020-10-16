@@ -7,7 +7,7 @@ import java.io.ObjectOutputStream;
 import entidades.Locacao;
 
 public class GerenciadorLocacoes {
-	public static void gravar(Locacao locacao, String caminho) throws IOException{
+    public static void gravar(Locacao locacao, String caminho) throws IOException{
         FileOutputStream arquivoSaida = null;
         ObjectOutputStream objetoSaida = null;
         try{
@@ -20,4 +20,6 @@ public class GerenciadorLocacoes {
             arquivoSaida.close();
         }
     }
+        
+        
 }

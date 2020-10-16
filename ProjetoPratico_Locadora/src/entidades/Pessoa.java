@@ -2,7 +2,6 @@
 package entidades;
 
 import java.io.IOException;
-import java.lang.NullPointerException;
 import java.util.List;
 
 import gerenciadorArquivos.GerenciadorPessoas;
@@ -37,8 +36,8 @@ public abstract class Pessoa implements Serializable {
         return locacoes;
     }
 
-    public void setLocacoes(List<Locacao> locacoes) {
-            this.locacoes = locacoes;
+    public void addLocacao(Locacao locacao) {
+         this.locacoes.add(locacao);
     }
 
     public static int getCodigo() {

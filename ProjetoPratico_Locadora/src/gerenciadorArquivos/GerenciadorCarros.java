@@ -7,6 +7,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 import entidades.Carro;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -85,6 +87,30 @@ public class GerenciadorCarros {
         }
         return carros;
     }
+    
+        public static boolean atualizarCarro(List<Carro> carros, String caminho) throws FileNotFoundException, IOException, ClassNotFoundException{
+            List<Carro> allCarros = GerenciadorCarros.getCarros(caminho);
+            
+            for (Carro c : allCarros) {
+                for (Carro ca : carros) {
+                    if(c.getModelo().equals(ca.getModelo())){
+                        c = ca;
+                    }
+                }
+            }
+            
+            boolean success = (new File(caminho)).delete();
+            if(success){
+                for (Carro c : carros) {
+                    GerenciadorCarros.gravar(c, caminho);
+                }
+                
+                return true;
+            }
+        return false;
+    }
+    
+    
     
     
 }
