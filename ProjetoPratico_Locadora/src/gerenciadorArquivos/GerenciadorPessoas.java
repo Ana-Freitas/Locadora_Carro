@@ -1,5 +1,6 @@
 package gerenciadorArquivos;
 
+import constantes.Constantes;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -8,6 +9,7 @@ import java.io.ObjectOutputStream;
 
 import entidades.Fisica;
 import entidades.Juridica;
+import entidades.Locacao;
 import entidades.Pessoa;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -30,44 +32,45 @@ public class GerenciadorPessoas {
         }
     }
     
-    public static Pessoa ler(String nome, String caminho) throws IOException, ClassNotFoundException{
+      public static Pessoa ler(String nome, String caminho) throws IOException, ClassNotFoundException{
         Pessoa pessoa = null;
         FileInputStream arquivoEntrada = null;
         ObjectInputStream objetoEntrada = null;
         try{
             arquivoEntrada = new FileInputStream(caminho);
-            objetoEntrada = new ObjectInputStream(arquivoEntrada);
+            
             while(arquivoEntrada.available() > 0){
+                objetoEntrada = new ObjectInputStream(arquivoEntrada);
                 pessoa = (Pessoa)objetoEntrada.readObject();
-                if(pessoa.getNome().equals(nome)) {
-                	return pessoa;
+                if(pessoa.getNome().equalsIgnoreCase(nome)){
+                    return pessoa;
                 }
             }
         }finally{
             objetoEntrada.close();
             arquivoEntrada.close();
         }
-        return null;
+        return pessoa;
     }
     
-    public static boolean existe(String identificacao, String caminho) throws IOException, ClassNotFoundException{
+    public static boolean existe(Pessoa p, String caminho) throws IOException, ClassNotFoundException{
         Pessoa pessoa = null;
         FileInputStream arquivoEntrada = null;
         ObjectInputStream objetoEntrada = null;
         try{
             arquivoEntrada = new FileInputStream(caminho);
-            objetoEntrada = new ObjectInputStream(arquivoEntrada);
             while(arquivoEntrada.available() > 0){
+                objetoEntrada = new ObjectInputStream(arquivoEntrada);
                 pessoa = (Pessoa)objetoEntrada.readObject();
-                if(pessoa.getTipo() == Pessoa.enmTipo.FISICO) {
-    				if(((Fisica) pessoa).getCpf().equals(identificacao)){
-    					return true;
-    				}
-    			}else if(pessoa.getTipo() == Pessoa.enmTipo.JURIDICO) {
-    				if(((Juridica) pessoa).getCnpj().equals(identificacao)) {
-    					return true;
-    				}
-    			}
+                if(pessoa.getTipo() == Pessoa.enmTipo.FISICO && p.getTipo() == Pessoa.enmTipo.FISICO) {
+                    if(((Fisica) pessoa).getCpf().equals(((Fisica) p).getCpf())){
+                            return true;
+                    }
+                }else if(pessoa.getTipo() == Pessoa.enmTipo.JURIDICO && p.getTipo() == Pessoa.enmTipo.JURIDICO) {
+                    if(((Juridica) pessoa).getCnpj().equals(((Juridica) p).getCnpj())){
+                        return true;
+                    }
+                }  
             }
         }finally{
             objetoEntrada.close();
@@ -101,7 +104,7 @@ public class GerenciadorPessoas {
             
             for (Pessoa p : pessoas) {
                 if(p.getNome().equals(pessoa.getNome())){
-                    p = pessoa;
+                    p.setLocacao(pessoa.getLocacoes());
                 }
             }
             

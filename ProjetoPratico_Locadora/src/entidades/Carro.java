@@ -4,12 +4,13 @@ import java.io.IOException;
 import java.io.Serializable;
 
 import gerenciadorArquivos.GerenciadorCarros;
+import util.FuncoesUteis;
 
 public class Carro implements Serializable{
 	
     private static final long serialVersionUID = 1L;
 	
-    private static int codigo;
+    private int codCarro;
     private String marca;
     private String modelo;
     private String estado;
@@ -30,7 +31,7 @@ public class Carro implements Serializable{
         this.valorDiaria = valorDiaria;
         this.estado = estado;
         this.situacao = situacao;
-        Carro.codigo++;
+        this.codCarro = FuncoesUteis.getProxCodCarro();
     }	
 
     public String getMarca() {
@@ -73,7 +74,7 @@ public class Carro implements Serializable{
             this.qtdPorta = qtdPorta;
     }
 
-    public boolean isHasArCond() {
+    public boolean getHasArCond() {
             return hasArCond;
     }
 
@@ -105,8 +106,8 @@ public class Carro implements Serializable{
             this.situacao = situacao;
     }
 
-    public static int getCodigo() {
-            return codigo;
+    public int getCodigo() {
+            return this.codCarro;
     }	
 
     public boolean salvarCarro(String caminho) throws IOException, ClassNotFoundException {

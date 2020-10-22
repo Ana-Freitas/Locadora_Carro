@@ -20,82 +20,68 @@ import util.FuncoesUteis;
 
 public class JanelaCarro extends JInternalFrame implements ActionListener{
 
-	private static final long serialVersionUID = 1L;
-	
-	private JanelaPrincipal janela;
-	
-	private JPanel panel;
-	private JLabel labelMarca;
-	private JTextField fieldMarca;		
-	private JLabel labelModelo;
-	private JTextField fieldModelo;
-	private JLabel labelAno;
-	private JTextField fieldAno;
-	private JLabel labelPlaca;
-	private JTextField fieldPlaca;
-	private JLabel labelQtdPortas;
-	private JTextField fieldQtdPortas;
-	private JLabel labelValorDia;
-	private JTextField fieldValorDia;
-	private JComboBox<String> cboEstado;
-        private JLabel lblEstado;
-	
-	private JRadioButton radioArCond;
-	
-	/*private JRadioButton radioDisponivel;
-    private JRadioButton radioAlocado;
-    private ButtonGroup group;*/
-	
+    private static final long serialVersionUID = 1L;
+
+    private JanelaPrincipal janela;
+
+    private JPanel panel;
+    private JLabel labelMarca;
+    private JTextField fieldMarca;		
+    private JLabel labelModelo;
+    private JTextField fieldModelo;
+    private JLabel labelAno;
+    private JTextField fieldAno;
+    private JLabel labelPlaca;
+    private JTextField fieldPlaca;
+    private JLabel labelQtdPortas;
+    private JTextField fieldQtdPortas;
+    private JLabel labelValorDia;
+    private JTextField fieldValorDia;
+    private JComboBox<String> cboEstado;
+    private JLabel lblEstado;
+
+    private JRadioButton radioArCond;
+
     private JButton buttonInserir;
 	
-	public JanelaCarro(String titulo, JanelaPrincipal janela) {
-		super(titulo, true, true, true, true);
-		this.janela = janela;
-		criarComponentes();
-		ajustarPropridadesJanela();
-	}
+    public JanelaCarro(String titulo, JanelaPrincipal janela) {
+        super(titulo, true, true, true, true);
+        this.janela = janela;
+        criarComponentes();
+        ajustarPropridadesJanela();
+    }
 	
-	private void criarComponentes() {
-		panel = new JPanel();
-		
+    private void criarComponentes() {
+        panel = new JPanel();
+
         labelMarca = new JLabel("Marca: ");  
         fieldMarca = new JTextField(10);        
-        
+
         labelModelo = new JLabel("Modelo: "); 
         fieldModelo = new JTextField(10);
-        
+
         labelAno = new JLabel("Ano: ");        
         fieldAno = new JTextField(4);
-        
+
         labelPlaca = new JLabel("Placa: ");        
         fieldPlaca = new JTextField(10);
-        
+
         labelQtdPortas = new JLabel("Quantidade de portas: ");        
         fieldQtdPortas = new JTextField(10);
-        
-        labelValorDia = new JLabel("Valor Di�ria: ");        
+
+        labelValorDia = new JLabel("Valor Diária: ");        
         fieldValorDia = new JTextField(10);
-        
+
         String[] estados = {"AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO", "MA", "MT","MS", "MG", "PA", "PB", "PR", "PE", "PI", "RJ", "RN", "RS", "RO", "RR", "SC", "SP", "SE", "TO"};
         cboEstado = new JComboBox(estados);        
         lblEstado = new JLabel("Estado:");
-        
+
         radioArCond = new JRadioButton("Possui Ar Condicionado");
         radioArCond.setSelected(false);
-        
-       /* radioDisponivel = new JRadioButton("Dispon�vel");
-        radioDisponivel.setSelected(true);
 
-        radioAlocado = new JRadioButton("Alocado");
-        radioAlocado.setSelected(false);
-
-        group = new ButtonGroup();
-        group.add(radioDisponivel);
-        group.add(radioAlocado);*/
-        
         buttonInserir = new JButton("Cadastrar Carro");
         buttonInserir.addActionListener(this);
-        
+
         panel.add(labelMarca);
         panel.add(fieldMarca);
         panel.add(labelModelo);
@@ -111,12 +97,11 @@ public class JanelaCarro extends JInternalFrame implements ActionListener{
         panel.add(fieldValorDia);
         panel.add(lblEstado);
         panel.add(cboEstado);
-        //panel.add(radioDisponivel);
-        //panel.add(radioAlocado);    	
+
         panel.add(buttonInserir);
-        
-    	add(panel);
-	}
+
+        add(panel);
+    }
 	
     private void ajustarPropridadesJanela() {
         setVisible(true);

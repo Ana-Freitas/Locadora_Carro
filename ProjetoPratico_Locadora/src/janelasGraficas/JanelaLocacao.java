@@ -88,8 +88,6 @@ public class JanelaLocacao extends JInternalFrame implements ActionListener{
         lstCarros.setFixedCellHeight(15);
         lstCarros.setFixedCellWidth(100);
         lstCarros.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-        //lstCarros.setVisibleRowCount(4);
-        //add(new JScrollPane(lstCarros));
         
         labelNumDiaria = new JLabel("Número de Diárias: ");        
         fieldNumDiaria = new JTextField(7);
@@ -138,6 +136,8 @@ public class JanelaLocacao extends JInternalFrame implements ActionListener{
             }
         } catch (IOException | ClassNotFoundException ex) {
             JOptionPane.showMessageDialog(null, ex);
+        } catch (NullPointerException ex){
+             nomes = new String[0];
         }
         
         return nomes;
@@ -155,6 +155,8 @@ public class JanelaLocacao extends JInternalFrame implements ActionListener{
             }
         } catch (IOException | ClassNotFoundException ex) {
             JOptionPane.showMessageDialog(null, ex);
+        } catch(NullPointerException ex){
+            nomes = new String[0];
         }
         
         return nomes;
@@ -181,14 +183,16 @@ public class JanelaLocacao extends JInternalFrame implements ActionListener{
         try{  
             if(this.validarCampos()){
                 carros = this.getCarrosSelecionados();
-                pessoa = Pessoa.getPessoa(cboClientes.getSelectedItem().toString(), Constantes.CAMINHO_PESSOA);
-                locacao = new Locacao(DataUtil.formatToLocalDate(fieldDataRealizacao.getText()), Integer.parseInt(fieldNumDiaria.getText()), DataUtil.formatToLocalDate(fieldDataMaxDevolucao.getText()), pessoa, carros);
-                pessoa.addLocacao(locacao);
-                GerenciadorPessoas.atualizarPessoa(pessoa, Constantes.CAMINHO_PESSOA);
-                GerenciadorCarros.atualizarCarro(carros, Constantes.CAMINHO_CARRO);
-                locacao.salvarLocacao(Constantes.CAMINHO_LOCACAO);	
-                inseriu = true;
-                JOptionPane.showMessageDialog(null, "Locação feita com sucesso!");
+                if(carros.size() > 0){
+                    pessoa = Pessoa.getPessoa(cboClientes.getSelectedItem().toString(), Constantes.CAMINHO_PESSOA);
+                    locacao = new Locacao(DataUtil.formatToLocalDate(fieldDataRealizacao.getText()), Integer.parseInt(fieldNumDiaria.getText()), DataUtil.formatToLocalDate(fieldDataMaxDevolucao.getText()), pessoa, carros);
+                    pessoa.addLocacao(locacao);
+                    GerenciadorPessoas.atualizarPessoa(pessoa, Constantes.CAMINHO_PESSOA);
+                    GerenciadorCarros.atualizarCarro(carros, Constantes.CAMINHO_CARRO);
+                    locacao.salvarLocacao(Constantes.CAMINHO_LOCACAO);	
+                    inseriu = true;
+                    JOptionPane.showMessageDialog(null, "Locação feita com sucesso!");
+                }
             }
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(null,ex);
@@ -228,8 +232,12 @@ public class JanelaLocacao extends JInternalFrame implements ActionListener{
             for (Carro carro : carros) {
                 for (String item : carrosSel) {
                     if(carro.getModelo().equals(item)){
-                        carro.setSituacao(false);
-                        carrosSelecionados.add(carro);
+                        if(carro.isSituacao()){
+                            carro.setSituacao(false);
+                            carrosSelecionados.add(carro);
+                        }else{
+                            JOptionPane.showMessageDialog(null, "O carro:" + carro.getModelo() + "já está alocado!");
+                        }
                     }
                 }
             }

@@ -20,7 +20,6 @@ import entidades.Fisica;
 import entidades.Juridica;
 import entidades.Locacao;
 import entidades.Pessoa;
-import gerenciadorArquivos.GerenciadorPessoas;
 import java.util.ArrayList;
 
 public class JanelaCliente extends JInternalFrame implements ActionListener{
@@ -45,15 +44,15 @@ public class JanelaCliente extends JInternalFrame implements ActionListener{
     
     private JButton buttonInserir;
 	
-	public JanelaCliente(String titulo, JanelaPrincipal janela) {
-		super(titulo, true, true, true, true);
-		this.janela = janela;
-		criarComponentes();
-		ajustarPropridadesJanela();
-	}
+    public JanelaCliente(String titulo, JanelaPrincipal janela) {
+        super(titulo, true, true, true, true);
+        this.janela = janela;
+        criarComponentes();
+        ajustarPropridadesJanela();
+    }
 	
-	private void criarComponentes() {
-		panel = new JPanel();
+    private void criarComponentes() {
+        panel = new JPanel();
 		
         labelNome = new JLabel("Nome: ");        
         fieldNome = new JTextField(25);
@@ -115,24 +114,23 @@ public class JanelaCliente extends JInternalFrame implements ActionListener{
     	panel.add(buttonInserir);
 
     	add(panel);
-	}
+    }
 	
-	private void ajustarPropridadesJanela() {
-		setVisible(true);
-		setSize(500,300);
-		setLocation(45, 20);
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-	}
+    private void ajustarPropridadesJanela() {
+        setVisible(true);
+        setSize(500,300);
+        setLocation(45, 20);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    }
 
-	@Override
-	public void actionPerformed(ActionEvent event) {
-		// TODO Auto-generated method stub
-		if(event.getSource() == buttonInserir) {
-			inserirCliente();
+    @Override
+    public void actionPerformed(ActionEvent event) {
+        if(event.getSource() == buttonInserir) {
+                inserirCliente();
         }
-	}
+    }
 	
-	private void inserirCliente() {
+    private void inserirCliente() {
     	String nome, cpfcnpj, razaoSocial;
     	boolean opcao = radioCPF.isSelected();
     	List<Locacao> locacoes;
@@ -166,21 +164,21 @@ public class JanelaCliente extends JInternalFrame implements ActionListener{
             }
         
         if(inseriu){
-        	limparCampos(fieldNome, fieldCPF, fieldCNPJ, fieldRazaoSocial);
-        	fieldNome.requestFocusInWindow();
+            limparCampos(fieldNome, fieldCPF, fieldCNPJ, fieldRazaoSocial);
+            fieldNome.requestFocusInWindow();
         }else{
-        	JOptionPane.showMessageDialog(this, "Cliente não inserido", "Erro", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Cliente não inserido", "Erro", JOptionPane.ERROR_MESSAGE);
         }
     }
 	
-	private void limparCampos(JTextField... fields) {
+    private void limparCampos(JTextField... fields) {
         for(JTextField field : fields) {
             field.setText(null);
             radioCPF.setSelected(true);
         }
     }
 	
-	public class RadioListener implements ActionListener {
+    public class RadioListener implements ActionListener {
     	@Override
         public void actionPerformed(ActionEvent e) {
             if(e.getSource() == radioCPF) {

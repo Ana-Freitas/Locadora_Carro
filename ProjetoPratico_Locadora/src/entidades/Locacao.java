@@ -18,7 +18,7 @@ public class Locacao implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
 	
-	private static int codigo;
+    private static int codigo;
     private int numero;
     private LocalDate dataRealizacao;
     private int numDiarias;

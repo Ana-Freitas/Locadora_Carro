@@ -90,19 +90,26 @@ public class GerenciadorCarros {
     
         public static boolean atualizarCarro(List<Carro> carros, String caminho) throws FileNotFoundException, IOException, ClassNotFoundException{
             List<Carro> allCarros = GerenciadorCarros.getCarros(caminho);
-            
-            for (Carro c : allCarros) {
+            allCarros.forEach((c) -> {
                 for (Carro ca : carros) {
                     if(c.getModelo().equals(ca.getModelo())){
-                        c = ca;
+                        c.setSituacao(ca.isSituacao());
+                        c.setAno(ca.getAno());
+                        c.setEstado(ca.getEstado());
+                        c.setHasArCond(ca.getHasArCond());
+                        c.setSituacao(ca.isSituacao());
+                        c.setValorDiaria(ca.getValorDiaria());
+                        c.setPlaca(ca.getPlaca());
+                        c.setModelo(ca.getModelo());
+                        c.setQtdPorta(ca.getQtdPorta());
                     }
                 }
-            }
-            
+        });
+          
             boolean success = (new File(caminho)).delete();
             if(success){
-                for (Carro c : carros) {
-                    GerenciadorCarros.gravar(c, caminho);
+                for (Carro ci : allCarros) {
+                    GerenciadorCarros.gravar(ci, caminho);
                 }
                 
                 return true;

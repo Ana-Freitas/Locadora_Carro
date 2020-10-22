@@ -6,9 +6,10 @@ import java.util.List;
 
 import gerenciadorArquivos.GerenciadorPessoas;
 import java.io.Serializable;
+import util.FuncoesUteis;
 
 public abstract class Pessoa implements Serializable {
-    private static int codigo;
+    private int codPessoa;
     private String nome;
     private List<Locacao> locacoes;
     protected enmTipo tipoPessoa;
@@ -21,9 +22,12 @@ public abstract class Pessoa implements Serializable {
     public Pessoa(String nome, List<Locacao> locacoes) {
             this.nome = nome;
             this.locacoes = locacoes;
-            Pessoa.codigo++;
+            this.codPessoa = FuncoesUteis.getProxCodCliente();
     }
-
+    
+    public int getCodigo(){
+        return this.codPessoa;
+    }
     public String getNome() {
             return nome;
     }
@@ -39,17 +43,17 @@ public abstract class Pessoa implements Serializable {
     public void addLocacao(Locacao locacao) {
          this.locacoes.add(locacao);
     }
-
-    public static int getCodigo() {
-            return codigo;
-    }   
+    
+    public void setLocacao(List<Locacao> list) {
+         this.locacoes = list;
+    }
 
     public enmTipo getTipo() {
         return tipoPessoa;
     }
     
     public boolean salvarPessoa(String caminho) throws IOException, ClassNotFoundException {
-        if(!Pessoa.existe(this.getNome(), caminho) ) {
+        if(!Pessoa.existe(this, caminho) ) {
             GerenciadorPessoas.gravar(this, caminho);
             return true;
         }
@@ -62,9 +66,9 @@ public abstract class Pessoa implements Serializable {
         return pessoa;
     }
         
-    public static boolean existe(String identificacao, String caminho){
+    public static boolean existe(Pessoa p, String caminho){
         try {
-            return GerenciadorPessoas.existe(identificacao, caminho);
+            return GerenciadorPessoas.existe(p, caminho);
         } catch (IOException | ClassNotFoundException | NullPointerException ex) {
            return false;
         }
